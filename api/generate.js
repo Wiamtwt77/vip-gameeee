@@ -12,31 +12,36 @@ export default async function handler(req, res) {
   const categoriesStr = categories.length > 0 ? categories.join('، ') : 'عام، يوميات، مطاعم، سفر';
   const usedStr = usedTopics.length > 0 ? usedTopics.join('، ') : 'لا يوجد';
 
-  const prompt = `أنت محرك لعبة 'الجاسوس الغافل'. المطلوب توليد موضوع لعبة مبتكر باللغة العربية.
-التصنيفات المختارة: [${categoriesStr}]
-عدد اللاعبين: ${playersCount}
-مواضيع استخدمت سابقاً يمنع تكرارها: [${usedStr}]
-const prompt = `أنت العقل المدبر والمبتكر للعبة 'الجاسوس الغافل'.
+  // زوايا عشوائية تضاف للموجه لمنع الذكاء الاصطناعي من الوقوع في نمط مكرر
+  const randomAngles = [
+    "ركز على موقف سينمائي أو درامي غير مألوف",
+    "ركز على مكان دقيق جداً أو تفصيلي من الحياة اليومية",
+    "ركز على حادثة غريبة أو طريفة تحدث لأشخاص عاديين",
+    "ركز على مهنة أو نشاط ترفيهي غير تقليدي"
+  ];
+  const currentAngle = randomAngles[Math.floor(Math.random() * randomAngles.length)];
+
+  const prompt = `أنت العقل المدبر والمبتكر للعبة 'الجاسوس الغافل'.
 مهمتك: توليد فكرة لعبة جديدة تماماً، غير متوقعة، وبعيدة عن الأنماط المكررة باللغة العربية.
 
 التصنيفات المتاحة: [${categoriesStr}]
 عدد اللاعبين: ${playersCount}
 مواضيع سابقة (يمنع منعاً باتاً الاقتراب من أفكارها أو صياغتها): [${usedStr}]
+زاوية الابتكار لهذه الجولة: (${currentAngle})
 
 قواعد الابتكار لكسر التوقع والتكرار:
-1. التنويع الأسلوبي: لا تستخدم نفس النمط اللغوي في كل مرة. غير الزاوية (مرة موقف سينمائي، مرة مكان دقيق، مرة حدث يومي غير عادي، مرة نشاط محدد).
+1. التنويع الأسلوبي: لا تستخدم نفس النمط اللغوي في كل مرة. غير الزاوية بناءً على زاوية الابتكار المطلوبة.
 2. الفارق الذكي: "realTopic" و "fakeTopic" يجب أن يكونا من نفس التصنيف وبينهما تشابه ظاهري يجعل الجاسوس يندمج، لكن الفارق الضمني بينهما يسبب مواقف كوميدية أو ارتباكاً عند النقاش.
 3. تلميحات متغيرة النمط (hints): يجب توليد ${playersCount} تلميحات. اجعل كل تلميح له طابع مختلف (تلميح حركي، تلميح بصري، تلميح شعوري، تلميح عن صوت أو بيئة المكان).
 4. تلميح الجاسوس: يجب أن يبدو منطقياً تماماً بالنسبة لموضوعه الخاطئ، دون أن يكشف أنه لا يعرف الموضوع الحقيقي.
 
 المطلوب: رد بصيغة JSON فقط (Valid JSON Object) بدون أي نصوص إضافية أو علامات Markdown:
 {
-  "realTopic": "الموضوع الحقيقي (مبتكر وبعيد عن الكليشيهات)",
-  "fakeTopic": "موضوع الجاسوس الخاطئ (قريب ومضلل بذكاء)",
+  "realTopic": "الموضوع الحقيقي",
+  "fakeTopic": "موضوع الجاسوس الخاطئ",
   "hints": ["تلميح 1", "تلميح 2", ...]
-}
-`;
-   - ممنوع تقديم شروحات أو تحليلات طويلة خارج نطاق الشخصية.
+}`;
+
   try {
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
@@ -47,23 +52,25 @@ const prompt = `أنت العقل المدبر والمبتكر للعبة 'ال
         "X-Title": "Blind Spy Game"
       },
       body: JSON.stringify({
-        model: "openai/gpt-3.5-turbo",
+        model: "openai/gpt-4o-mini", // يُفضل استخدام gpt-4o-mini للألعاب لسرعته وذكائه العالي في التنوع
         messages: [
           { role: "system", content: "You are a JSON-only API for the Blind Spy Arabic party game. Always respond with raw valid JSON." },
           { role: "user", content: prompt }
         ],
-        temperature: 0.8
+        temperature: 0.95 // رفع درجة العشوائية للتنوع
       })
     });
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error("OpenRouter API Error Response:", errorText);
       throw new Error(`OpenRouter API error: ${response.status}`);
     }
 
     const data = await response.json();
     let content = data.choices?.[0]?.message?.content || "";
     
-    // Clean up possible markdown code blocks
+    // تنظيف أي علامات Markdown قد ترجع بالخطأ
     content = content.replace(/```json/gi, '').replace(/```/g, '').trim();
     
     const parsedData = JSON.parse(content);
@@ -72,7 +79,7 @@ const prompt = `أنت العقل المدبر والمبتكر للعبة 'ال
   } catch (error) {
     console.error("AI Generation Error, falling back to local database:", error);
 
-    // Fallback topic pool grouped by categories
+    // قائمة الطوارئ
     const fallbacks = [
       {
         realTopic: "مطعم برجر يقدم ألعاب خفة يد مع الوجبة",
