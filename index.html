@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>برا السالفة: المحقق ضد الجاسوس</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --text: #f8fafc;
+            --text-muted: #94a3b8;
+            --danger: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            padding: 28px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: #60a5fa;
+        }
+
+        p.subtitle {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 12px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background-color: #0f172a;
+            color: var(--text);
+            font-size: 1rem;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            margin-top: 8px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-secondary {
+            background-color: #334155;
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background-color: #475569;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .card-role {
+            background-color: #0f172a;
+            border: 2px dashed var(--accent);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 20px 0;
+        }
+
+        .role-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .word-badge {
+            display: inline-block;
+            background-color: var(--accent);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .hint-box {
+            background-color: #334155;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .players-list {
+            margin-bottom: 16px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+    <!-- Supabase CDN Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<div class="container">
+    <h1>🕵️‍♂️ برا السالفة</h1>
+    <p class="subtitle">نمط: المحقق ضد الجاسوس</p>
+
+    <!-- 1. الشاشة الأولى: الإعداد وإضافة اللاعبين -->
+    <div id="screen-setup" class="screen active">
+        <div class="players-list" id="players-container">
+            <div class="input-group"><input type="text" placeholder="اللاعب 1" class="player-input"></div>
+            <div class="input-group"><input type="text" placeholder="اللاعب 2" class="player-input"></div>
+            <div class="input-group"><input type="text" placeholder="اللاعب 3" class="player-input"></div>
+        </div>
+        <button class="btn btn-secondary" onclick="addPlayerInput()">+ إضافة لاعب</button>
+        <button class="btn btn-primary" onclick="startGame()">بدء اللعبة 🚀</button>
+    </div>
+
+    <!-- 2. الشاشة الثانية: تمرير الهاتف وكشف الدور (Pass & Play) -->
+    <div id="screen-reveal" class="screen">
+        <h2 id="reveal-turn-title">مرر الهاتف إلى...</h2>
+        <div id="role-card-container" style="display: none;">
+            <div class="card-role">
+                <div id="role-title" class="role-title"></div>
+                <div id="role-desc"></div>
+                <div id="word-display" style="display: none;">
+                    <br>الكلمة السرية:<br>
+                    <span id="secret-word-text" class="word-badge"></span>
+                </div>
+            </div>
+            <button class="btn btn-secondary" onclick="nextPlayer()">إخفاء الدوّر وتمرير الهاتف ➡️</button>
+        </div>
+        <button id="btn-show-role" class="btn btn-primary" onclick="showCurrentRole()">عرض دوري سرًا 👁️</button>
+    </div>
+
+    <!-- 3. الشاشة الثالثة: مرحلة اللعب والنقاش -->
+    <div id="screen-play" class="screen">
+        <h2>بدأت الجولة! ⏳</h2>
+        <div class="hint-box">
+            💡 **التعليمات:**<br>
+            ناقشوا واسألوا بعضكم بعضًا.<br>
+            * **المحقق:** يعرف الكلمة ويسأل ليكشف الجاسوس.<br>
+            * **الجاسوس:** يحاول معرفة الكلمة أو كشف المحقق.
+        </div>
+        
+        <p style="margin-bottom: 12px; color: var(--text-muted);">حدد النتيجة عند انتهاء الجولة:</p>
+        <button class="btn btn-success" onclick="finishGame('detective')">فوز المحقق والمواطنين 🔍</button>
+        <button class="btn btn-danger" onclick="finishGame('spy')">فوز الجاسوس 🕵️‍♂️</button>
+    </div>
+
+    <!-- 4. الشاشة الرابعة: النتيجة -->
+    <div id="screen-result" class="screen">
+        <h2>🎉 نهاية اللعبة</h2>
+        <div class="card-role">
+            <p>الكلمة السرية كانت:</p>
+            <span id="result-word" class="word-badge"></span>
+            <hr style="margin: 15px 0; border: 0; border-top: 1px solid #334155;">
+            <p id="result-winner" style="font-size: 1.2rem; font-weight: bold;"></p>
+        </div>
+        <button class="btn btn-primary" onclick="resetGame()">لعبة جديدة 🔄</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
