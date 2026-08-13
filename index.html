@@ -349,6 +349,52 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        /* --- Developer Link & Toast Styles --- */
+        .developer-btn {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .developer-btn:hover {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px var(--neon-cyan);
+        }
+
+        .toast-notification {
+            position: fixed;
+            bottom: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(18, 18, 32, 0.95);
+            border: 1.5px solid var(--neon-cyan);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 30px;
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.4);
+            backdrop-filter: blur(10px);
+            font-size: 0.95rem;
+            font-weight: 800;
+            z-index: 9999;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            opacity: 0;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toast-notification.show {
+            bottom: 25px;
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -476,8 +522,29 @@
             </div>
         </div>
 
+        <!-- زر المطور -->
+        <div class="developer-btn" onclick="showDevToast()">
+            👨‍💻 المطور
+        </div>
+    </div>
+
+    <!-- إشعار Toast المطور -->
+    <div id="devToast" class="toast-notification">
+        <span>💻 المطور:</span> <span style="color: var(--neon-cyan);">توات سليسو</span>
     </div>
 
     <script src="script.js"></script>
+    <script>
+        let toastTimeout;
+        function showDevToast() {
+            const toast = document.getElementById('devToast');
+            toast.classList.add('show');
+            
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
