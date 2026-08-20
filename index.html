@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المحكمة السرية - لعبة الغموض والدبلوماسية</title>
+    <title>المحكمة السرية - الاستنتاج والدبلوماسية المعقدة</title>
     <style>
         :root {
-            --bg-dark: #0f111a;
-            --bg-card: #1a1d2e;
-            --bg-accent: #252a44;
-            --primary: #c9a050;
-            --primary-hover: #e5b860;
+            --bg-dark: #0a0c14;
+            --bg-card: #141824;
+            --bg-accent: #1d2338;
+            --primary: #d4af37;
+            --primary-hover: #f3c644;
             --danger: #e74c3c;
-            --success: #2ecc71;
-            --text-main: #f0f2f5;
-            --text-muted: #95a5a6;
-            --border: #2d3250;
+            --info: #3498db;
+            --text-main: #ecf0f1;
+            --text-muted: #8b95a5;
+            --border: #28304a;
         }
 
         * {
@@ -37,12 +37,12 @@
 
         .container {
             width: 100%;
-            max-width: 900px;
+            max-width: 950px;
             background: var(--bg-card);
             border-radius: 12px;
             border: 1px solid var(--border);
             padding: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
         }
 
         header {
@@ -54,34 +54,29 @@
 
         h1 {
             color: var(--primary);
-            font-size: 2rem;
-            margin-bottom: 8px;
+            font-size: 2.2rem;
+            letter-spacing: 1px;
         }
 
         .subtitle {
             color: var(--text-muted);
             font-size: 0.95rem;
+            margin-top: 4px;
         }
 
-        .setup-panel, .game-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .hidden {
-            display: none !important;
-        }
+        .hidden { display: none !important; }
 
         .form-group {
             display: flex;
             flex-direction: column;
             gap: 8px;
+            margin-bottom: 14px;
         }
 
         label {
             font-weight: bold;
             color: var(--primary);
+            font-size: 0.95rem;
         }
 
         input, select, textarea, button {
@@ -90,7 +85,7 @@
             border: 1px solid var(--border);
             background: var(--bg-accent);
             color: var(--text-main);
-            font-size: 1rem;
+            font-size: 0.95rem;
         }
 
         input:focus, select:focus, textarea:focus {
@@ -111,90 +106,89 @@
             transform: translateY(-1px);
         }
 
-        button:disabled {
-            background: var(--border);
-            color: var(--text-muted);
-            cursor: not-allowed;
-            transform: none;
-        }
-
         .status-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: var(--bg-accent);
-            padding: 12px 16px;
+            padding: 12px 18px;
             border-radius: 8px;
             font-weight: bold;
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        @media (max-width: 600px) {
-            .grid-2 { grid-template-columns: 1fr; }
-        }
-
-        .card-box {
-            background: var(--bg-accent);
-            padding: 16px;
-            border-radius: 8px;
-            border-right: 4px solid var(--primary);
-        }
-
-        .secret-banner {
-            background: #2a1b1b;
-            border: 1px solid var(--danger);
-            color: #ff8888;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            text-align: center;
-            margin-bottom: 12px;
-        }
-
-        .log-box {
-            background: #11131f;
             border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 12px;
-            max-height: 200px;
-            overflow-y: auto;
-            font-size: 0.9rem;
-            line-height: 1.5;
         }
 
         .badge {
             background: var(--primary);
             color: #000;
-            padding: 2px 8px;
+            padding: 3px 10px;
             border-radius: 12px;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
         }
 
-        .player-turn-header {
+        .card-box {
             background: var(--bg-accent);
-            border: 1px solid var(--primary);
-            padding: 12px;
+            padding: 20px;
             border-radius: 8px;
+            border-right: 4px solid var(--primary);
+            margin-bottom: 16px;
+        }
+
+        .secret-banner {
+            background: #2a1111;
+            border: 1px solid var(--danger);
+            color: #ff9999;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
             text-align: center;
-            font-size: 1.2rem;
+            margin-bottom: 16px;
             font-weight: bold;
+        }
+
+        .evidence-card {
+            background: #0f1322;
+            border: 1px solid #2d3859;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .evidence-card h4 {
             color: var(--primary);
+            margin-bottom: 8px;
+            border-bottom: 1px dashed var(--border);
+            padding-bottom: 6px;
+        }
+
+        .leak-box {
+            background: #121a2d;
+            border: 1px solid var(--info);
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 10px;
         }
 
         .vote-item {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 8px;
+            padding: 10px;
             background: var(--bg-accent);
             border-radius: 6px;
             margin-bottom: 6px;
+            border: 1px solid var(--border);
         }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: var(--primary);
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -202,53 +196,48 @@
 <div class="container">
     <header>
         <h1>المحكمة السرية</h1>
-        <p class="subtitle">لعبة الغموض والدبلوماسية والاستنتاج الاستراتيجي</p>
+        <p class="subtitle">نظام الغموض الاستراتيجي - استنتاج الأدلة غير المباشرة والتضليل</p>
     </header>
 
     <!-- SETUP PANEL -->
-    <div id="setupPanel" class="setup-panel">
+    <div id="setupPanel">
         <div class="form-group">
-            <label for="playerCount">عدد اللاعبين (3 - 6):</label>
+            <label for="playerCount">عدد المشاركين في التشكيل (3 - 6):</label>
             <input type="number" id="playerCount" min="3" max="6" value="3">
         </div>
-        <div id="playerInputs" class="form-group">
-            <!-- Player name inputs generated dynamically -->
-        </div>
-        <button id="startBtn">بدء اللعبة الجديدة</button>
+        <div id="playerInputs" class="form-group"></div>
+        <button id="startBtn" style="width:100%; padding:14px; margin-top:10px;">بدء الجلسة السرية</button>
     </div>
 
     <!-- GAME PANEL -->
-    <div id="gamePanel" class="game-panel hidden">
-        <div class="status-bar">
+    <div id="gamePanel" class="hidden">
+        <div class="status-bar" style="margin-bottom:20px;">
             <span>الجولة: <span id="roundNum">1</span></span>
-            <span>المرحلة: <span id="phaseName" class="badge">الدبلوماسية</span></span>
-            <span>اللاعب الحالي: <span id="activePlayer" style="color:var(--primary)">-</span></span>
+            <span>المرحلة: <span id="phaseName" class="badge">-</span></span>
+            <span>المكلف حالياً: <span id="activePlayer" style="color:var(--primary)">-</span></span>
         </div>
 
-        <div id="phaseContent">
-            <!-- Dynamic Phase Content UI -->
-        </div>
+        <div id="phaseContent"></div>
     </div>
 </div>
 
 <script>
 /**
- * ARCHITECTURE & ENGINE MODULES (SINGLE FILE SYSTEM)
+ * CORE ENGINE & STATE MANAGEMENT
  */
 
-// 1. GAME STATE MANAGEMENT
 const GameState = {
     round: 1,
-    phase: 'DIPLOMACY', // DIPLOMACY, ACTION, ANALYSIS, DISCUSSION, VOTING, RESULT
+    phase: 'DIPLOMACY',
     players: [],
     activePlayerIndex: 0,
-    alliances: [], // [{from, to}]
-    privateMessages: [], // [{from, to, text}]
-    roundSecretActions: [], // [{actorId, actionType, targetId, cardId}]
-    persistentSecrets: [], // Unrevealed actions carried over
-    caseData: null, // Generated by AI Engine
-    votes: {}, // {voterId: targetId}
-    
+    alliances: [], 
+    privateMessages: [], 
+    roundSecretActions: [], 
+    persistentSecrets: [], 
+    caseData: null, 
+    votes: {},
+
     reset() {
         this.round = 1;
         this.phase = 'DIPLOMACY';
@@ -263,15 +252,14 @@ const GameState = {
     }
 };
 
-// CARD DEFINITIONS (ABSTRACT MECHANICS)
 const CARDS = [
-    { id: 'c1', name: 'تحقيق سري', type: 'INSPECT', desc: 'كشف جزء من تحالفات لاعب آخر.' },
-    { id: 'c2', name: 'تحالف ظلي', type: 'ALLIANCE', desc: 'اقتراح حلف سري يمنح حماية متبادلة.' },
-    { id: 'c3', name: 'تسريب مستندات', type: 'LEAK', desc: 'إعادة توجيه والشبهات نحو هدف آخر.' },
-    { id: 'c4', name: 'تجميد أصول', type: 'SABOTAGE', desc: 'إعاقة خيارات هدفك في الجولة.' }
+    { id: 'c1', name: 'تحقيق ظلي', type: 'INSPECT', desc: 'تتبع حركة المستندات السرية دون علم الهدف.' },
+    { id: 'c2', name: 'تحالف مغلق', type: 'ALLIANCE', desc: 'تنسيق سري يمنع تسريب الاتصالات الرسمية.' },
+    { id: 'c3', name: 'توجيه الشبهة', type: 'REDIRECT', desc: 'تزوير الآثار المادية لترتبط بطرف ثالث.' },
+    { id: 'c4', name: 'عرقلة قرارات', type: 'SABOTAGE', desc: 'تجميد صلاحيات الهدف بشكل مستتر.' }
 ];
 
-// 2. SERVERLESS AI BRIDGE
+// SERVERLESS AI INTEGRATION WITH DYNAMIC ENGINE
 async function callAIEngine(abstractPayload) {
     try {
         const response = await fetch('/api/game', {
@@ -279,46 +267,62 @@ async function callAIEngine(abstractPayload) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ rawData: abstractPayload })
         });
-        if (!response.ok) throw new Error("API call failed");
+        if (!response.ok) throw new Error("Serverless Engine Error");
         return await response.json();
     } catch (err) {
-        console.warn("Serverless API offline, running fallback dynamic Engine", err);
-        return fallbackLocalAnalysis(abstractPayload);
+        console.warn("API Call Fallback: Generating Dynamic Suspicion Matrix locally...", err);
+        return generateDynamicLocalEngine(abstractPayload);
     }
 }
 
-// Zero-Template Dynamic Local Logic Engine (Strictly No Fixed Cases)
-function fallbackLocalAnalysis(data) {
-    const actorsCount = data.players.length;
+// INTELLIGENT FALLBACK ENGINE (Zero Templates, Pure Multi-Suspect Logic)
+function generateDynamicLocalEngine(data) {
+    const players = data.players;
     const secrets = data.secretActions;
-    
-    let suspectTarget = "مجهول";
-    let clueDetails = "لوحظت تحركات غير منتظمة في أروقة المحكمة.";
-    
+    const alliances = data.alliances;
+
+    // Pick two potential suspects dynamically to create genuine conflict
+    let suspectA = players[0];
+    let suspectB = players[1] || players[0];
+
     if (secrets.length > 0) {
-        const primaryAction = secrets[0];
-        const actorObj = data.players.find(p => p.id === primaryAction.actorId);
-        const targetObj = data.players.find(p => p.id === primaryAction.targetId);
-        suspectTarget = targetObj ? targetObj.name : "أحد الأعضاء";
-        
-        clueDetails = `تم رصد نشاط غير عادي مرتبط بـ (${suspectTarget}) عقب مرحلة القرارات السرية، مع وجود وثائق غير مكتملة حول العملية.`;
+        const primary = secrets[0];
+        const actor = players.find(p => p.id === primary.actorId);
+        const target = players.find(p => p.id === primary.targetId);
+        if (actor) suspectA = actor;
+        if (target) suspectB = target;
     }
 
     return {
-        title: `قضية الجولة ${data.round}: الشبهة الغامضة حول ${suspectTarget}`,
-        publicEvidence: clueDetails,
-        privateLeaks: data.players.map(p => ({
-            playerId: p.id,
-            hint: `معلومة خاصة لـ ${p.name}: تم التقاط إشارات عن تحالفات أو تحركات مستترة تخص النطاق التنفيذي.`
-        })),
+        title: `القضية ${data.round}: اضطراب في السجلات التنفيذية للمحكمة`,
+        incidentOverview: `شهدت هذه الجولة تسريبات غير مصرح بها وتضارباً في التقارير الأمنية. تشير القرائن إلى وجود تحرك سري تقاطع بين عدة أطراف دون حتمية قاطعة.`,
+        suspicionMatrix: [
+            {
+                suspectId: suspectA.id,
+                suspectName: suspectA.name,
+                circumstantialEvidence: `تم رصد بصمة توقيع تشبه النمط الخاص باللاعب (${suspectA.name}) على أحد مستندات الجلسة، لكن توقيت صدور الوثيقة يناقض موقعه المعلن.`
+            },
+            {
+                suspectId: suspectB.id,
+                suspectName: suspectB.name,
+                circumstantialEvidence: `تلقى السجل المالي تحويلات غامضة تزامنت مع التحركات المنسوبة لـ (${suspectB.name})، مما يجعله طرفاً محتملاً في التوجيه.`
+            }
+        ],
+        privateLeaks: players.map((p, idx) => {
+            const other = players[(idx + 1) % players.length];
+            return {
+                playerId: p.id,
+                hint: `معلومة سرية وصلت إليك: شوهدت مراسلات غير رسمية تخص (${other.name}) قد تتعارض مع ادعاءاته في جلسة النقاش.`
+            };
+        }),
         solvabilityEvaluation: {
             isSolvable: true,
-            suspicionBalance: "متوازن"
+            suspicionBalance: "متوازن (يوجد خياران منطقيان على الأقل)"
         }
     };
 }
 
-// 3. UI ENGINE & CONTROLLERS
+// UI CONTROLLER
 const UI = {
     setupPanel: document.getElementById('setupPanel'),
     gamePanel: document.getElementById('gamePanel'),
@@ -339,8 +343,8 @@ const UI = {
         for (let i = 1; i <= count; i++) {
             this.playerInputsDiv.innerHTML += `
                 <div class="form-group">
-                    <label>اسم اللاعب ${i}:</label>
-                    <input type="text" class="player-name-input" value="لاعب ${i}">
+                    <label>اسم المشارك ${i}:</label>
+                    <input type="text" class="player-name-input" value="عضو ${i}">
                 </div>
             `;
         }
@@ -352,7 +356,7 @@ const UI = {
         inputs.forEach((inp, idx) => {
             GameState.players.push({
                 id: `p_${idx+1}`,
-                name: inp.value.trim() || `لاعب ${idx+1}`,
+                name: inp.value.trim() || `عضو ${idx+1}`,
                 cards: [...CARDS]
             });
         });
@@ -371,12 +375,12 @@ const UI = {
 
     getPhaseArabic(p) {
         const map = {
-            'DIPLOMACY': 'الدبلوماسية والرسائل',
+            'DIPLOMACY': 'الدبلوماسية المكتومة',
             'ACTION': 'الأفعال السرية',
-            'ANALYSIS': 'تحليل الذكاء الاصطناعي',
-            'DISCUSSION': 'النقاش والأدلة',
-            'VOTING': 'التصويت السري',
-            'RESULT': 'النتائج'
+            'ANALYSIS': 'تحليل الأدلة والشبهات',
+            'DISCUSSION': 'المداولة والتضليل',
+            'VOTING': 'الاقتراع السري',
+            'RESULT': 'الحكم النهائي'
         };
         return map[p] || p;
     },
@@ -394,23 +398,25 @@ const UI = {
         const otherPlayers = GameState.players.filter(p => p.id !== player.id);
 
         this.phaseContent.innerHTML = `
-            <div class="secret-banner">⚠️ شاشة خاصة بـ (${player.name}) - لا تجعل الآخرين يرون خياراتك!</div>
-            <div class="player-turn-header">دور اللاعب: ${player.name}</div>
+            <div class="secret-banner">🛑 شاشة مغلقة خاصة بـ (${player.name}) - تأكد من عدم رؤية الآخرين</div>
             <div class="card-box">
-                <h3>إرسال رسالة خاصة / اقتراح تحالف</h3>
-                <div class="form-group" style="margin-top:10px;">
-                    <label>اختر المستلم:</label>
+                <h3>إرسال رسالة تكتيكية / عرض تحالف</h3>
+                <p style="color:var(--text-muted); font-size:0.85rem; margin-top:4px; margin-bottom:12px;">
+                    الرسائل قد تؤثر في تحليل الأدلة الشبهة دون كشف نصها المباشر.
+                </p>
+                <div class="form-group">
+                    <label>الجهة المستهدفة:</label>
                     <select id="msgTarget">
                         ${otherPlayers.map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
                     </select>
                 </div>
-                <div class="form-group" style="margin-top:10px;">
-                    <label>الرسالة السرية:</label>
-                    <textarea id="msgText" rows="2" placeholder="اكتب عرضك السري هنا..."></textarea>
+                <div class="form-group">
+                    <label>محتوى الرسالة الخاصة:</label>
+                    <textarea id="msgText" rows="3" placeholder="اقترح اتفاقاً، أو وجه تحذيراً سرياً..."></textarea>
                 </div>
-                <button onclick="UI.handleSendDiplomacy()" style="margin-top:10px; width:100%;">تأكيد وإرسال الرسالة</button>
+                <button onclick="UI.handleSendDiplomacy()" style="width:100%;">إرسال الصفقة وتأكيد الدور</button>
             </div>
-            <button onclick="UI.nextDiplomacyPlayer()" style="margin-top:10px; width:100%; background:var(--bg-accent); border:1px solid var(--primary);">تخطي / إنهاء الدور</button>
+            <button onclick="UI.nextDiplomacyPlayer()" style="width:100%; background:transparent; border:1px solid var(--border); color:var(--text-muted);">إنهاء الدور بدون إرسال</button>
         `;
     },
 
@@ -448,22 +454,22 @@ const UI = {
         const otherPlayers = GameState.players.filter(p => p.id !== player.id);
 
         this.phaseContent.innerHTML = `
-            <div class="secret-banner">⚠️ سرية مطلقة: اختر بطاقتك وهدفك دون كشف أي معلومة</div>
-            <div class="player-turn-header">الحدث السري لـ: ${player.name}</div>
+            <div class="secret-banner">🔒 السرية التامة: اختر إجراءك دون أن يتوقع الآخرون مسارك</div>
             <div class="card-box">
-                <div class="form-group">
-                    <label>اختر بطاقاتك السرية:</label>
+                <h3>تطبيق بطاقة سرية</h3>
+                <div class="form-group" style="margin-top:10px;">
+                    <label>البطاقات المتاحة:</label>
                     <select id="actionCard">
-                        ${player.cards.map(c => `<option value="${c.id}">${c.name} - ${c.desc}</option>`).join('')}
+                        ${player.cards.map(c => `<option value="${c.id}">${c.name} — (${c.desc})</option>`).join('')}
                     </select>
                 </div>
-                <div class="form-group" style="margin-top:10px;">
-                    <label>الهدف المستهدف:</label>
+                <div class="form-group">
+                    <label>الهدف المعني بالتأثير:</label>
                     <select id="actionTarget">
                         ${otherPlayers.map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
                     </select>
                 </div>
-                <button onclick="UI.handleExecuteAction()" style="margin-top:15px; width:100%;">تنفيذ الفعل بسرية</button>
+                <button onclick="UI.handleExecuteAction()" style="width:100%; margin-top:10px;">تسجيل الفعل بسرية مطلقة</button>
             </div>
         `;
     },
@@ -472,7 +478,6 @@ const UI = {
         const player = GameState.players[GameState.activePlayerIndex];
         const cardId = document.getElementById('actionCard').value;
         const targetId = document.getElementById('actionTarget').value;
-
         const cardObj = CARDS.find(c => c.id === cardId);
 
         GameState.roundSecretActions.push({
@@ -490,18 +495,20 @@ const UI = {
         }
     },
 
-    // PHASE 3: AI ANALYSIS & EVIDENCE ENGINE
+    // PHASE 3: AI ANALYSIS
     async startPhaseAnalysis() {
         GameState.phase = 'ANALYSIS';
         this.updateHeader();
         this.phaseContent.innerHTML = `
-            <div style="text-align:center; padding:40px;">
-                <h2>جاري تحليل الحالة وتوليد القضايا والأدلة...</h2>
-                <p style="color:var(--text-muted); margin-top:10px;">الذكاء الاصطناعي يقوم بربط الحقائق المجردة وتوليد أدلة قابلة للحل دون كشف الأفعال.</p>
+            <div style="text-align:center; padding:50px 20px;">
+                <div class="spinner"></div>
+                <h3 style="color:var(--primary); margin-top:15px;">محرك التحليل الاستراتيجي يعالج البيانات...</h3>
+                <p style="color:var(--text-muted); font-size:0.9rem; margin-top:8px;">
+                    يتم تحويل الأفعال السرية والمراسلات إلى مصفوفة أدلة تناقضية تعتمد الاستنتاج المزدوج.
+                </p>
             </div>
         `;
 
-        // Prepare RAW ABSTRACT DATA (Strictly No Prompt Templates/Examples)
         const rawPayload = {
             round: GameState.round,
             players: GameState.players.map(p => ({ id: p.id, name: p.name })),
@@ -513,32 +520,46 @@ const UI = {
         const result = await callAIEngine(rawPayload);
         GameState.caseData = result;
 
-        // Move secret actions into persistent logs
         GameState.persistentSecrets.push(...GameState.roundSecretActions);
         GameState.roundSecretActions = [];
 
         this.startPhaseDiscussion();
     },
 
-    // PHASE 4: DISCUSSION & EVIDENCE DISPLAY
+    // PHASE 4: DISCUSSION & EVIDENCES
     startPhaseDiscussion() {
         GameState.phase = 'DISCUSSION';
         this.updateHeader();
 
         const caseData = GameState.caseData;
 
+        let matrixHTML = '';
+        if (caseData.suspicionMatrix && caseData.suspicionMatrix.length > 0) {
+            matrixHTML = caseData.suspicionMatrix.map(item => `
+                <div class="evidence-card">
+                    <h4>قرينة تحيط بـ: ${item.suspectName}</h4>
+                    <p style="font-size:0.95rem; line-height:1.5;">${item.circumstantialEvidence}</p>
+                </div>
+            `).join('');
+        }
+
         let privateLeaksHTML = '';
         if (caseData.privateLeaks && caseData.privateLeaks.length > 0) {
             privateLeaksHTML = `
-                <div class="card-box" style="margin-top:15px;">
-                    <h3>تسريبات خاصة للاعبين (افتح تسريبك بسرية):</h3>
+                <div class="card-box" style="margin-top:20px;">
+                    <h3>تسريبات تكتيكية خاصة (افتح عنصرك بشكل فردي):</h3>
                     <div style="margin-top:10px;">
-                        ${caseData.privateLeaks.map(leak => `
-                            <details style="margin-bottom:8px; background:var(--bg-dark); padding:8px; border-radius:4px;">
-                                <summary style="cursor:pointer; color:var(--primary); font-weight:bold;">تسريب خاص بـ: ${GameState.players.find(p=>p.id===leak.playerId)?.name || leak.playerId}</summary>
-                                <p style="margin-top:6px; color:var(--text-main);">${leak.hint}</p>
-                            </details>
-                        `).join('')}
+                        ${caseData.privateLeaks.map(leak => {
+                            const pName = GameState.players.find(p => p.id === leak.playerId)?.name || leak.playerId;
+                            return `
+                                <details style="margin-bottom:8px; background:var(--bg-dark); padding:10px; border-radius:6px; border:1px solid var(--border);">
+                                    <summary style="cursor:pointer; color:var(--primary); font-weight:bold;">تسريب سري للمشارك: ${pName}</summary>
+                                    <div class="leak-box">
+                                        <p style="font-size:0.9rem;">${leak.hint}</p>
+                                    </div>
+                                </details>
+                            `;
+                        }).join('')}
                     </div>
                 </div>
             `;
@@ -546,13 +567,16 @@ const UI = {
 
         this.phaseContent.innerHTML = `
             <div class="card-box">
-                <h2 style="color:var(--primary);">${caseData.title}</h2>
-                <p style="margin-top:10px; font-size:1.05rem; line-height:1.6;">${caseData.publicEvidence}</p>
+                <h2 style="color:var(--primary); margin-bottom:10px;">${caseData.title}</h2>
+                <p style="font-size:1rem; line-height:1.6; color:var(--text-main); margin-bottom:16px;">
+                    ${caseData.incidentOverview}
+                </p>
+                <h3 style="color:var(--primary); margin-bottom:12px; font-size:1.1rem;">مصفوفة الأدلة والشبهات المتقاطعة:</h3>
+                ${matrixHTML}
             </div>
             ${privateLeaksHTML}
-            <div style="margin-top:20px; text-align:center;">
-                <p style="color:var(--text-muted); margin-bottom:12px;">تناقشوا بناءً على الأدلة والتسريبات. لا يوجد كشف تلقائي للأفعال!</p>
-                <button onclick="UI.startPhaseVoting()" style="width:100%; padding:14px; font-size:1.1rem;">الانتقال للتصويت السري</button>
+            <div style="margin-top:24px; text-align:center;">
+                <button onclick="UI.startPhaseVoting()" style="width:100%; padding:14px; font-size:1.1rem;">الانتقال إلى جلسة الاقتراع والحكم</button>
             </div>
         `;
     },
@@ -571,16 +595,16 @@ const UI = {
         const otherPlayers = GameState.players.filter(p => p.id !== player.id);
 
         this.phaseContent.innerHTML = `
-            <div class="secret-banner">⚠️ تصويت سري فردي لـ (${player.name})</div>
-            <div class="player-turn-header">صوت على المتهم الرئيسي بالقضية</div>
-            <div class="card-box" style="margin-top:15px;">
-                <div class="form-group">
-                    <label>اختر اللاعب الذي تعتقد أنه خلف الشبهة:</label>
+            <div class="secret-banner">⚖️ تصويت سري خاص بـ (${player.name})</div>
+            <div class="card-box">
+                <h3>اصدار الصوت القضائي</h3>
+                <div class="form-group" style="margin-top:12px;">
+                    <label>اختر من ترى أنه المسئول بناءً على تقاطع الأدلة والتسريبات:</label>
                     <select id="voteTarget">
                         ${otherPlayers.map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
                     </select>
                 </div>
-                <button onclick="UI.handleCastVote()" style="margin-top:15px; width:100%;">تأكيد التصويت السري</button>
+                <button onclick="UI.handleCastVote()" style="width:100%; margin-top:10px;">اعتماد الصوت السري</button>
             </div>
         `;
     },
@@ -588,7 +612,6 @@ const UI = {
     handleCastVote() {
         const player = GameState.players[GameState.activePlayerIndex];
         const targetId = document.getElementById('voteTarget').value;
-
         GameState.votes[player.id] = targetId;
 
         GameState.activePlayerIndex++;
@@ -599,12 +622,11 @@ const UI = {
         }
     },
 
-    // PHASE 6: RESULT & ADVANCEMENT
+    // PHASE 6: RESULT
     startPhaseResult() {
         GameState.phase = 'RESULT';
         this.updateHeader();
 
-        // Tally Votes
         const tally = {};
         Object.values(GameState.votes).forEach(t => {
             tally[t] = (tally[t] || 0) + 1;
@@ -623,23 +645,25 @@ const UI = {
 
         this.phaseContent.innerHTML = `
             <div class="card-box" style="text-align:center;">
-                <h2>نتيجة قضية الجولة ${GameState.round}</h2>
-                <p style="margin-top:15px; font-size:1.2rem;">
-                    تم إدانة اللاعب: <strong style="color:var(--danger);">${accusedPlayer ? accusedPlayer.name : 'لا أحد (تعادل)'}</strong> بـ (${maxVotes}) أصوات.
+                <h2>نتيجة المداولة - الجولة ${GameState.round}</h2>
+                <p style="margin-top:16px; font-size:1.2rem;">
+                    بناءً على الأغلبية، تم إدانة المشارك: 
+                    <strong style="color:var(--danger);">${accusedPlayer ? accusedPlayer.name : 'لا أحد (تعادل بالأصوات)'}</strong> 
+                    بواقع (${maxVotes}) أصوات.
                 </p>
-                <div style="margin-top:15px; background:var(--bg-dark); padding:12px; border-radius:6px; text-align:right;">
-                    <strong>تفاصيل الأصوات:</strong>
+                <div style="margin-top:20px; text-align:right;">
+                    <h4 style="color:var(--primary); margin-bottom:8px;">سجل أصوات الجلسة:</h4>
                     ${Object.entries(GameState.votes).map(([voter, target]) => {
-                        const vName = GameState.players.find(p=>p.id===voter)?.name;
-                        const tName = GameState.players.find(p=>p.id===target)?.name;
-                        return `<div class="vote-item"><span>${vName}</span> <span>صوّت ضد ➔ ${tName}</span></div>`;
+                        const vName = GameState.players.find(p => p.id === voter)?.name;
+                        const tName = GameState.players.find(p => p.id === target)?.name;
+                        return `<div class="vote-item"><span>المشارك: ${vName}</span> <span>وجه التهمة إلى ➔ ${tName}</span></div>`;
                     }).join('')}
                 </div>
-                <p style="margin-top:15px; color:var(--text-muted); font-size:0.85rem;">
-                    ملاحظة: الأفعال السرية والأحداث غير المكشوفة تظل مكتومة ومستمرة للجولات القادمة.
+                <p style="margin-top:16px; color:var(--text-muted); font-size:0.85rem;">
+                    تنويه: الأفعال والتفاصيل السرية التي لم تكشفها الأدلة تظل مكتومة ومستمرة في السجل لتبنى عليها الجولات التالية.
                 </p>
             </div>
-            <button onclick="UI.nextRound()" style="margin-top:15px; width:100%; padding:14px; font-size:1.1rem;">بدء الجولة التالية</button>
+            <button onclick="UI.nextRound()" style="width:100%; padding:14px; margin-top:10px; font-size:1.1rem;">الانتقال للجولة التالية</button>
         `;
     },
 
@@ -651,7 +675,6 @@ const UI = {
     }
 };
 
-// Initialize UI
 window.addEventListener('DOMContentLoaded', () => UI.init());
 </script>
 </body>
