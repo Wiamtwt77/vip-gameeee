@@ -10,48 +10,26 @@ export default async function handler(req, res) {
 
     const apiKey = process.env.OPENROUTER_KEY;
     if (!apiKey) {
-        return res.status(500).json({ error: 'OPENROUTER_KEY variable is missing on server environment' });
+        return res.status(500).json({ error: 'OPENROUTER_KEY missing' });
     }
 
     const systemPrompt = `
-أنت محرك استنتاج جنائي واستراتيجي فريد للعبة "المحكمة السرية".
-مهمتك: تحليل بيانات الجولة المجردة دون وجود أي أمثلة ثابته أو قوالب سابقة.
+أنت خبير أدلة استراتيجية في لعبة "المحكمة السرية".
+مهمتك: قراءة أحداث الجولة وتوليد أدلة ناعمة ومؤشرات عامة (Soft Clues) دون كشف اسم أي لاعب أو نوع بطاقته المباشر.
 
-قواعد الاستنتاج الصارمة:
-1. ممنوع كشف الفاعل أو اسم البطاقة أو الفعل السري صراحةً (مثلاً: لا تقل "أحمد استخدم بطاقة كذا على محمود").
-2. ممنوع اختراع حقائق أو أحداث لم تقع نهائياً في بيانات الجولة.
-3. التوليد يجب أن يتبع "مصفوفة الشبهات المتقاطعة" (Multi-Suspect Suspicion Matrix):
-   - صغ الأدلة بحيث تضع الشك والقرائن على لاعبين (2) على الأقل بطريقة غير مباشرة.
-   - اجعل الأدلة تعبر عن آثار مادية (مستندات مفقودة، تغير في المواعيد، حركة أموال غير مبررة) تناسب الأفعال المسجلة فقط.
-4. زود كل لاعب بتسريب سري خاص به يناسب دوره ويمنحه جزءاً من الحقيقة دون الحتمية.
-5. قيم إمكانية الحل (Solvability) لتضمن وجود مساحة للنقاش والتضليل والتصويت.
+القواعد:
+1. صغ (2) إلى (3) أدلة غامضة تعتمد على:
+   - مستويات السمعة (مثلاً: "الجاني يمتلك أكثر من 8 نقاط سمعة").
+   - مستويات خطر البطاقات (مثلاً: "تم رصد نشاط عالي الخطر أثر على ميزانية المجلس").
+   - التحالفات والروابط دون ذكر أطرافها.
+2. ممنوع تماماً ذكر أسماء اللاعبين صراحة أو اسم البطاقة.
 
-يجب إرجاع النتيجة حصراً بصيغة JSON مجردة بالشكل التالي:
+أرجع النتيجة بتنسيق JSON حصراً:
 {
-  "title": "عنوان القضية الاستراتيجي",
-  "incidentOverview": "وصف عام للظواهر المادية الشاذة الناتجة في الجلسة دون تسمية الفاعلين صراحة",
-  "suspicionMatrix": [
-    {
-      "suspectId": "id_1",
-      "suspectName": "اسم المشتبه به الأول",
-      "circumstantialEvidence": "القرينة الظرفية الشبهة المرتبطة به بشكل غير مباشر"
-    },
-    {
-      "suspectId": "id_2",
-      "suspectName": "اسم المشتبه به الثاني",
-      "circumstantialEvidence": "القرينة الظرفية الشبهة المرتبطة به"
-    }
-  ],
-  "privateLeaks": [
-    {
-      "playerId": "id",
-      "hint": "تلميح خاص أو تسريب غير مباشر يستفيد منه هذا اللاعب في المداولة"
-    }
-  ],
-  "solvabilityEvaluation": {
-    "isSolvable": true,
-    "suspicionBalance": "متوازن مع وجود أكثر من خيار منطقي"
-  }
+  "clues": [
+    "الدليل الأول...",
+    "الدليل الثاني..."
+  ]
 }
 `;
 
@@ -66,7 +44,7 @@ export default async function handler(req, res) {
                 model: "anthropic/claude-3-haiku",
                 messages: [
                     { role: "system", content: systemPrompt },
-                    { role: "user", content: `البيانات المجردة للجولة: ${JSON.stringify(rawData)}` }
+                    { role: "user", content: `بيانات الجولة: ${JSON.stringify(rawData)}` }
                 ],
                 response_format: { type: "json_object" }
             })
@@ -76,6 +54,6 @@ export default async function handler(req, res) {
         const content = JSON.parse(data.choices[0].message.content);
         return res.status(200).json(content);
     } catch (err) {
-        return res.status(500).json({ error: "Failed to generate AI strategy matrix", details: err.message });
+        return res.status(500).json({ error: "Failed to generate clues" });
     }
 }
