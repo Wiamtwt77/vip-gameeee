@@ -1,10 +1,13 @@
-
 {
-  "name": "spy-game-bra-alsalfa",
-  "version": "1.0.0",
-  "type": "module",
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "dependencies": {}
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
