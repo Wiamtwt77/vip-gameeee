@@ -3,192 +3,158 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>المحكمة السرية - الاستنتاج والدبلوماسية المعقدة</title>
+    <title>المحكمة السرية - صراع السمعة والبطاقات</title>
     <style>
         :root {
-            --bg-dark: #0a0c14;
-            --bg-card: #141824;
-            --bg-accent: #1d2338;
-            --primary: #d4af37;
-            --primary-hover: #f3c644;
+            --bg-dark: #080a10;
+            --bg-card: #111625;
+            --bg-accent: #1a2136;
+            --primary: #f1c40f;
+            --primary-dark: #b7950b;
             --danger: #e74c3c;
+            --success: #2ecc71;
             --info: #3498db;
             --text-main: #ecf0f1;
-            --text-muted: #8b95a5;
-            --border: #28304a;
+            --text-muted: #8a95a5;
+            --border: #28334e;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
         body {
             background-color: var(--bg-dark);
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 15px;
         }
 
         .container {
             width: 100%;
-            max-width: 950px;
+            max-width: 900px;
             background: var(--bg-card);
-            border-radius: 12px;
+            border-radius: 14px;
             border: 1px solid var(--border);
             padding: 24px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            position: relative;
         }
 
         header {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             border-bottom: 2px solid var(--primary);
-            padding-bottom: 16px;
+            padding-bottom: 12px;
         }
 
-        h1 {
-            color: var(--primary);
-            font-size: 2.2rem;
-            letter-spacing: 1px;
-        }
-
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-top: 4px;
-        }
+        h1 { color: var(--primary); font-size: 2rem; }
+        .subtitle { color: var(--text-muted); font-size: 0.9rem; margin-top: 4px; }
 
         .hidden { display: none !important; }
 
-        .form-group {
+        /* PASS DEVICE OVERLAY */
+        .overlay-screen {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(5, 7, 12, 0.98);
+            border-radius: 14px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            margin-bottom: 14px;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            text-align: center;
         }
 
-        label {
-            font-weight: bold;
-            color: var(--primary);
-            font-size: 0.95rem;
-        }
-
-        input, select, textarea, button {
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            background: var(--bg-accent);
-            color: var(--text-main);
-            font-size: 0.95rem;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: 2px solid var(--primary);
-        }
-
-        button {
+        .overlay-btn {
             background: var(--primary);
             color: #000;
+            padding: 16px 32px;
+            font-size: 1.2rem;
             font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        /* CARD STYLES */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .game-card {
+            background: var(--bg-accent);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
             cursor: pointer;
             transition: all 0.2s ease;
-            border: none;
+            position: relative;
         }
 
-        button:hover {
-            background: var(--primary-hover);
-            transform: translateY(-1px);
+        .game-card:hover, .game-card.selected {
+            border-color: var(--primary);
+            transform: translateY(-2px);
         }
+
+        .game-card.selected { background: #252e4a; outline: 2px solid var(--primary); }
+
+        .risk-badge {
+            position: absolute;
+            top: 10px; left: 10px;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .risk-low { background: #27ae60; color: #fff; }
+        .risk-med { background: #e67e22; color: #fff; }
+        .risk-high { background: #c0392b; color: #fff; }
+
+        .form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+        label { font-weight: bold; color: var(--primary); font-size: 0.95rem; }
+
+        input, select, textarea, button {
+            padding: 12px; border-radius: 6px; border: 1px solid var(--border);
+            background: var(--bg-accent); color: var(--text-main); font-size: 0.95rem;
+        }
+
+        button { background: var(--primary); color: #000; font-weight: bold; cursor: pointer; border: none; }
+        button:hover { background: var(--primary-dark); }
 
         .status-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--bg-accent);
-            padding: 12px 18px;
-            border-radius: 8px;
-            font-weight: bold;
-            border: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--bg-accent); padding: 12px 18px; border-radius: 8px;
+            margin-bottom: 20px; border: 1px solid var(--border);
         }
 
-        .badge {
-            background: var(--primary);
-            color: #000;
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 0.85rem;
+        .player-rep-list {
+            display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;
         }
 
-        .card-box {
-            background: var(--bg-accent);
-            padding: 20px;
-            border-radius: 8px;
-            border-right: 4px solid var(--primary);
-            margin-bottom: 16px;
+        .rep-tag {
+            background: #141c2e; border: 1px solid var(--border);
+            padding: 6px 12px; border-radius: 20px; font-size: 0.85rem;
         }
 
-        .secret-banner {
-            background: #2a1111;
-            border: 1px solid var(--danger);
-            color: #ff9999;
-            padding: 12px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            text-align: center;
-            margin-bottom: 16px;
-            font-weight: bold;
+        .event-box {
+            background: #2b1d0c; border: 1px solid #e67e22;
+            padding: 16px; border-radius: 8px; margin-top: 15px;
+            color: #f39c12; text-align: center;
         }
 
-        .evidence-card {
-            background: #0f1322;
-            border: 1px solid #2d3859;
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 12px;
+        .evidence-box {
+            background: #0d1b2a; border: 1px solid var(--info);
+            padding: 16px; border-radius: 8px; margin-bottom: 12px;
         }
-
-        .evidence-card h4 {
-            color: var(--primary);
-            margin-bottom: 8px;
-            border-bottom: 1px dashed var(--border);
-            padding-bottom: 6px;
-        }
-
-        .leak-box {
-            background: #121a2d;
-            border: 1px solid var(--info);
-            padding: 12px;
-            border-radius: 6px;
-            margin-top: 10px;
-        }
-
-        .vote-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            background: var(--bg-accent);
-            border-radius: 6px;
-            margin-bottom: 6px;
-            border: 1px solid var(--border);
-        }
-
-        .spinner {
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border-left-color: var(--primary);
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -196,26 +162,35 @@
 <div class="container">
     <header>
         <h1>المحكمة السرية</h1>
-        <p class="subtitle">نظام الغموض الاستراتيجي - استنتاج الأدلة غير المباشرة والتضليل</p>
+        <p class="subtitle">صراع السمعة، المخاطرة، والتحالفات المكتومة</p>
     </header>
+
+    <!-- OVERLAY PASS DEVICE -->
+    <div id="overlay" class="overlay-screen hidden">
+        <h2 id="overlayTitle" style="color:var(--primary); font-size:1.8rem;">تمرير الجوال</h2>
+        <p id="overlaySub" style="margin-top:10px; color:var(--text-muted);">سلم الجهاز للمشارك المستهدف وواجه الشاشة عنه</p>
+        <button class="overlay-btn" onclick="UI.hideOverlay()">أنا جاهز، فتح الشاشة</button>
+    </div>
 
     <!-- SETUP PANEL -->
     <div id="setupPanel">
         <div class="form-group">
-            <label for="playerCount">عدد المشاركين في التشكيل (3 - 6):</label>
+            <label>عدد اللاعبين (3 - 6):</label>
             <input type="number" id="playerCount" min="3" max="6" value="3">
         </div>
-        <div id="playerInputs" class="form-group"></div>
-        <button id="startBtn" style="width:100%; padding:14px; margin-top:10px;">بدء الجلسة السرية</button>
+        <div id="playerInputs"></div>
+        <button id="startBtn" style="width:100%; padding:14px; margin-top:10px;">بدء المعركة</button>
     </div>
 
     <!-- GAME PANEL -->
     <div id="gamePanel" class="hidden">
-        <div class="status-bar" style="margin-bottom:20px;">
+        <div class="status-bar">
             <span>الجولة: <span id="roundNum">1</span></span>
-            <span>المرحلة: <span id="phaseName" class="badge">-</span></span>
-            <span>المكلف حالياً: <span id="activePlayer" style="color:var(--primary)">-</span></span>
+            <span>المرحلة: <span id="phaseName" style="color:var(--primary)">-</span></span>
+            <span>الدور الحالي: <span id="activePlayer" style="color:var(--primary); font-weight:bold;">-</span></span>
         </div>
+
+        <div class="player-rep-list" id="repList"></div>
 
         <div id="phaseContent"></div>
     </div>
@@ -223,106 +198,45 @@
 
 <script>
 /**
- * CORE ENGINE & STATE MANAGEMENT
+ * DECK & GAME ENGINE
  */
+const CARD_DATABASE = [
+    { id: 'cd1', name: 'تمويل غامض', risk: 'low', desc: 'تضيف +2 نقطة سمعة لرصيدك بسرية.', effect: 'GAIN_REP' },
+    { id: 'cd2', name: 'تسريب مستندات', risk: 'med', desc: 'تترك أثراً يربط استثمار هدفك بالشبهات.', effect: 'LEAK' },
+    { id: 'cd3', name: 'تدمير سمعة', risk: 'high', desc: 'تخصم 3 نقاط من هدفك مباشرة وتزيد احتمال ظهور اسمك في القرائن!', effect: 'DAMAGE' },
+    { id: 'cd4', name: 'عقد تحالف سري', risk: 'low', desc: 'تفتح صندوق تواصل سري مع لاعب محدد.', effect: 'ALLIANCE' },
+    { id: 'cd5', name: 'تأمين أصول', risk: 'med', desc: 'تحميك من خسارة نقاط السمعة في التصويت الخاطئ لهذه الجولة.', effect: 'SHIELD' }
+];
+
+const WILD_EVENTS = [
+    { name: 'أزمة اقتصادية', desc: 'تم خصم 2 نقطة سمعة من صاحب أعلى رصيد نقاط!', action: 'MINUS_TOP' },
+    { name: 'عفو عام', desc: 'إضافة 1 نقطة سمعة لجميع اللاعبين دون استثناء.', action: 'ADD_ALL' },
+    { name: 'تفتيش مفاجئ', desc: 'خصم 2 نقطة من كل لاعب يمتلك تحالفاً قائماً!', action: 'MINUS_ALLIES' },
+    { name: 'انتعاش السوق', desc: 'إضافة 2 نقطة لأقل لاعب امتلاكاً للسمعة.', action: 'ADD_LOWEST' }
+];
 
 const GameState = {
     round: 1,
-    phase: 'DIPLOMACY',
+    phase: 'DRAW_ACTION',
     players: [],
     activePlayerIndex: 0,
-    alliances: [], 
-    privateMessages: [], 
-    roundSecretActions: [], 
-    persistentSecrets: [], 
-    caseData: null, 
+    alliances: [], // [{p1, p2}]
+    allianceMessages: [], // [{from, to, text}]
+    roundSecretActions: [],
+    selectedCardId: null,
     votes: {},
 
     reset() {
         this.round = 1;
-        this.phase = 'DIPLOMACY';
         this.players = [];
         this.activePlayerIndex = 0;
         this.alliances = [];
-        this.privateMessages = [];
+        this.allianceMessages = [];
         this.roundSecretActions = [];
-        this.persistentSecrets = [];
-        this.caseData = null;
         this.votes = {};
     }
 };
 
-const CARDS = [
-    { id: 'c1', name: 'تحقيق ظلي', type: 'INSPECT', desc: 'تتبع حركة المستندات السرية دون علم الهدف.' },
-    { id: 'c2', name: 'تحالف مغلق', type: 'ALLIANCE', desc: 'تنسيق سري يمنع تسريب الاتصالات الرسمية.' },
-    { id: 'c3', name: 'توجيه الشبهة', type: 'REDIRECT', desc: 'تزوير الآثار المادية لترتبط بطرف ثالث.' },
-    { id: 'c4', name: 'عرقلة قرارات', type: 'SABOTAGE', desc: 'تجميد صلاحيات الهدف بشكل مستتر.' }
-];
-
-// SERVERLESS AI INTEGRATION WITH DYNAMIC ENGINE
-async function callAIEngine(abstractPayload) {
-    try {
-        const response = await fetch('/api/game', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ rawData: abstractPayload })
-        });
-        if (!response.ok) throw new Error("Serverless Engine Error");
-        return await response.json();
-    } catch (err) {
-        console.warn("API Call Fallback: Generating Dynamic Suspicion Matrix locally...", err);
-        return generateDynamicLocalEngine(abstractPayload);
-    }
-}
-
-// INTELLIGENT FALLBACK ENGINE (Zero Templates, Pure Multi-Suspect Logic)
-function generateDynamicLocalEngine(data) {
-    const players = data.players;
-    const secrets = data.secretActions;
-    const alliances = data.alliances;
-
-    // Pick two potential suspects dynamically to create genuine conflict
-    let suspectA = players[0];
-    let suspectB = players[1] || players[0];
-
-    if (secrets.length > 0) {
-        const primary = secrets[0];
-        const actor = players.find(p => p.id === primary.actorId);
-        const target = players.find(p => p.id === primary.targetId);
-        if (actor) suspectA = actor;
-        if (target) suspectB = target;
-    }
-
-    return {
-        title: `القضية ${data.round}: اضطراب في السجلات التنفيذية للمحكمة`,
-        incidentOverview: `شهدت هذه الجولة تسريبات غير مصرح بها وتضارباً في التقارير الأمنية. تشير القرائن إلى وجود تحرك سري تقاطع بين عدة أطراف دون حتمية قاطعة.`,
-        suspicionMatrix: [
-            {
-                suspectId: suspectA.id,
-                suspectName: suspectA.name,
-                circumstantialEvidence: `تم رصد بصمة توقيع تشبه النمط الخاص باللاعب (${suspectA.name}) على أحد مستندات الجلسة، لكن توقيت صدور الوثيقة يناقض موقعه المعلن.`
-            },
-            {
-                suspectId: suspectB.id,
-                suspectName: suspectB.name,
-                circumstantialEvidence: `تلقى السجل المالي تحويلات غامضة تزامنت مع التحركات المنسوبة لـ (${suspectB.name})، مما يجعله طرفاً محتملاً في التوجيه.`
-            }
-        ],
-        privateLeaks: players.map((p, idx) => {
-            const other = players[(idx + 1) % players.length];
-            return {
-                playerId: p.id,
-                hint: `معلومة سرية وصلت إليك: شوهدت مراسلات غير رسمية تخص (${other.name}) قد تتعارض مع ادعاءاته في جلسة النقاش.`
-            };
-        }),
-        solvabilityEvaluation: {
-            isSolvable: true,
-            suspicionBalance: "متوازن (يوجد خياران منطقيان على الأقل)"
-        }
-    };
-}
-
-// UI CONTROLLER
 const UI = {
     setupPanel: document.getElementById('setupPanel'),
     gamePanel: document.getElementById('gamePanel'),
@@ -330,6 +244,7 @@ const UI = {
     playerInputsDiv: document.getElementById('playerInputs'),
     startBtn: document.getElementById('startBtn'),
     phaseContent: document.getElementById('phaseContent'),
+    overlay: document.getElementById('overlay'),
 
     init() {
         this.renderPlayerInputs();
@@ -343,8 +258,8 @@ const UI = {
         for (let i = 1; i <= count; i++) {
             this.playerInputsDiv.innerHTML += `
                 <div class="form-group">
-                    <label>اسم المشارك ${i}:</label>
-                    <input type="text" class="player-name-input" value="عضو ${i}">
+                    <label>لاعب ${i}:</label>
+                    <input type="text" class="player-name-input" value="لاعب ${i}">
                 </div>
             `;
         }
@@ -356,322 +271,366 @@ const UI = {
         inputs.forEach((inp, idx) => {
             GameState.players.push({
                 id: `p_${idx+1}`,
-                name: inp.value.trim() || `عضو ${idx+1}`,
-                cards: [...CARDS]
+                name: inp.value.trim() || `لاعب ${idx+1}`,
+                rep: 10,
+                hand: []
             });
         });
 
         this.setupPanel.classList.add('hidden');
         this.gamePanel.classList.remove('hidden');
-        this.startPhaseDiplomacy();
+        this.startRound();
     },
 
-    updateHeader() {
-        document.getElementById('roundNum').innerText = GameState.round;
-        document.getElementById('phaseName').innerText = this.getPhaseArabic(GameState.phase);
-        const currPlayer = GameState.players[GameState.activePlayerIndex];
-        document.getElementById('activePlayer').innerText = currPlayer ? currPlayer.name : '-';
+    showOverlay(title, sub, callback) {
+        document.getElementById('overlayTitle').innerText = title;
+        document.getElementById('overlaySub').innerText = sub;
+        this.overlay.classList.remove('hidden');
+        this.onOverlayConfirm = callback;
     },
 
-    getPhaseArabic(p) {
-        const map = {
-            'DIPLOMACY': 'الدبلوماسية المكتومة',
-            'ACTION': 'الأفعال السرية',
-            'ANALYSIS': 'تحليل الأدلة والشبهات',
-            'DISCUSSION': 'المداولة والتضليل',
-            'VOTING': 'الاقتراع السري',
-            'RESULT': 'الحكم النهائي'
-        };
-        return map[p] || p;
+    hideOverlay() {
+        this.overlay.classList.add('hidden');
+        if (this.onOverlayConfirm) this.onOverlayConfirm();
     },
 
-    // PHASE 1: DIPLOMACY
-    startPhaseDiplomacy() {
-        GameState.phase = 'DIPLOMACY';
-        GameState.activePlayerIndex = 0;
-        this.renderDiplomacyTurn();
-    },
-
-    renderDiplomacyTurn() {
-        this.updateHeader();
-        const player = GameState.players[GameState.activePlayerIndex];
-        const otherPlayers = GameState.players.filter(p => p.id !== player.id);
-
-        this.phaseContent.innerHTML = `
-            <div class="secret-banner">🛑 شاشة مغلقة خاصة بـ (${player.name}) - تأكد من عدم رؤية الآخرين</div>
-            <div class="card-box">
-                <h3>إرسال رسالة تكتيكية / عرض تحالف</h3>
-                <p style="color:var(--text-muted); font-size:0.85rem; margin-top:4px; margin-bottom:12px;">
-                    الرسائل قد تؤثر في تحليل الأدلة الشبهة دون كشف نصها المباشر.
-                </p>
-                <div class="form-group">
-                    <label>الجهة المستهدفة:</label>
-                    <select id="msgTarget">
-                        ${otherPlayers.map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>محتوى الرسالة الخاصة:</label>
-                    <textarea id="msgText" rows="3" placeholder="اقترح اتفاقاً، أو وجه تحذيراً سرياً..."></textarea>
-                </div>
-                <button onclick="UI.handleSendDiplomacy()" style="width:100%;">إرسال الصفقة وتأكيد الدور</button>
+    renderRepList() {
+        const repDiv = document.getElementById('repList');
+        repDiv.innerHTML = GameState.players.map(p => `
+            <div class="rep-tag">
+                👤 ${p.name}: <strong style="color:var(--primary);">${p.rep} ن</strong>
             </div>
-            <button onclick="UI.nextDiplomacyPlayer()" style="width:100%; background:transparent; border:1px solid var(--border); color:var(--text-muted);">إنهاء الدور بدون إرسال</button>
-        `;
+        `).join('');
     },
 
-    handleSendDiplomacy() {
-        const player = GameState.players[GameState.activePlayerIndex];
-        const targetId = document.getElementById('msgTarget').value;
-        const text = document.getElementById('msgText').value.trim();
-
-        if (text) {
-            GameState.privateMessages.push({ from: player.id, to: targetId, text });
-            GameState.alliances.push({ from: player.id, to: targetId });
-        }
-        this.nextDiplomacyPlayer();
-    },
-
-    nextDiplomacyPlayer() {
-        GameState.activePlayerIndex++;
-        if (GameState.activePlayerIndex >= GameState.players.length) {
-            this.startPhaseAction();
-        } else {
-            this.renderDiplomacyTurn();
-        }
-    },
-
-    // PHASE 2: SECRET ACTIONS
-    startPhaseAction() {
-        GameState.phase = 'ACTION';
-        GameState.activePlayerIndex = 0;
-        this.renderActionTurn();
-    },
-
-    renderActionTurn() {
-        this.updateHeader();
-        const player = GameState.players[GameState.activePlayerIndex];
-        const otherPlayers = GameState.players.filter(p => p.id !== player.id);
-
-        this.phaseContent.innerHTML = `
-            <div class="secret-banner">🔒 السرية التامة: اختر إجراءك دون أن يتوقع الآخرون مسارك</div>
-            <div class="card-box">
-                <h3>تطبيق بطاقة سرية</h3>
-                <div class="form-group" style="margin-top:10px;">
-                    <label>البطاقات المتاحة:</label>
-                    <select id="actionCard">
-                        ${player.cards.map(c => `<option value="${c.id}">${c.name} — (${c.desc})</option>`).join('')}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>الهدف المعني بالتأثير:</label>
-                    <select id="actionTarget">
-                        ${otherPlayers.map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
-                    </select>
-                </div>
-                <button onclick="UI.handleExecuteAction()" style="width:100%; margin-top:10px;">تسجيل الفعل بسرية مطلقة</button>
-            </div>
-        `;
-    },
-
-    handleExecuteAction() {
-        const player = GameState.players[GameState.activePlayerIndex];
-        const cardId = document.getElementById('actionCard').value;
-        const targetId = document.getElementById('actionTarget').value;
-        const cardObj = CARDS.find(c => c.id === cardId);
-
-        GameState.roundSecretActions.push({
-            actorId: player.id,
-            actionType: cardObj.type,
-            cardId: cardId,
-            targetId: targetId
+    startRound() {
+        // Draw 1-3 random cards for each player
+        GameState.players.forEach(p => {
+            const count = Math.floor(Math.random() * 3) + 1; // 1 to 3 cards
+            p.hand = [];
+            for (let i = 0; i < count; i++) {
+                const randomCard = CARD_DATABASE[Math.floor(Math.random() * CARD_DATABASE.length)];
+                p.hand.push({ ...randomCard, uniqueId: Math.random().toString() });
+            }
         });
 
-        GameState.activePlayerIndex++;
-        if (GameState.activePlayerIndex >= GameState.players.length) {
-            this.startPhaseAnalysis();
-        } else {
-            this.renderActionTurn();
-        }
+        GameState.phase = 'ACTION';
+        GameState.activePlayerIndex = 0;
+        this.promptPlayerTurn();
     },
 
-    // PHASE 3: AI ANALYSIS
-    async startPhaseAnalysis() {
-        GameState.phase = 'ANALYSIS';
-        this.updateHeader();
-        this.phaseContent.innerHTML = `
-            <div style="text-align:center; padding:50px 20px;">
-                <div class="spinner"></div>
-                <h3 style="color:var(--primary); margin-top:15px;">محرك التحليل الاستراتيجي يعالج البيانات...</h3>
-                <p style="color:var(--text-muted); font-size:0.9rem; margin-top:8px;">
-                    يتم تحويل الأفعال السرية والمراسلات إلى مصفوفة أدلة تناقضية تعتمد الاستنتاج المزدوج.
-                </p>
-            </div>
-        `;
-
-        const rawPayload = {
-            round: GameState.round,
-            players: GameState.players.map(p => ({ id: p.id, name: p.name })),
-            alliances: GameState.alliances,
-            secretActions: GameState.roundSecretActions,
-            persistentSecrets: GameState.persistentSecrets
-        };
-
-        const result = await callAIEngine(rawPayload);
-        GameState.caseData = result;
-
-        GameState.persistentSecrets.push(...GameState.roundSecretActions);
-        GameState.roundSecretActions = [];
-
-        this.startPhaseDiscussion();
+    promptPlayerTurn() {
+        const player = GameState.players[GameState.activePlayerIndex];
+        this.showOverlay(
+            `دور اللاعب: ${player.name}`,
+            `يرجى تسليم الجهاز إلى (${player.name}) وإخفاء الشاشة عن باقي الحضور.`,
+            () => this.renderActionPhase()
+        );
     },
 
-    // PHASE 4: DISCUSSION & EVIDENCES
-    startPhaseDiscussion() {
-        GameState.phase = 'DISCUSSION';
-        this.updateHeader();
+    renderActionPhase() {
+        this.renderRepList();
+        const player = GameState.players[GameState.activePlayerIndex];
+        document.getElementById('roundNum').innerText = GameState.round;
+        document.getElementById('phaseName').innerText = 'الأفعال والبطاقات السرية';
+        document.getElementById('activePlayer').innerText = player.name;
 
-        const caseData = GameState.caseData;
+        const otherPlayers = GameState.players.filter(p => p.id !== player.id);
 
-        let matrixHTML = '';
-        if (caseData.suspicionMatrix && caseData.suspicionMatrix.length > 0) {
-            matrixHTML = caseData.suspicionMatrix.map(item => `
-                <div class="evidence-card">
-                    <h4>قرينة تحيط بـ: ${item.suspectName}</h4>
-                    <p style="font-size:0.95rem; line-height:1.5;">${item.circumstantialEvidence}</p>
-                </div>
-            `).join('');
-        }
+        // Check active alliances for messaging
+        const myAlliances = GameState.alliances.filter(a => a.p1 === player.id || a.p2 === player.id);
+        let allyChatHTML = '';
 
-        let privateLeaksHTML = '';
-        if (caseData.privateLeaks && caseData.privateLeaks.length > 0) {
-            privateLeaksHTML = `
-                <div class="card-box" style="margin-top:20px;">
-                    <h3>تسريبات تكتيكية خاصة (افتح عنصرك بشكل فردي):</h3>
-                    <div style="margin-top:10px;">
-                        ${caseData.privateLeaks.map(leak => {
-                            const pName = GameState.players.find(p => p.id === leak.playerId)?.name || leak.playerId;
-                            return `
-                                <details style="margin-bottom:8px; background:var(--bg-dark); padding:10px; border-radius:6px; border:1px solid var(--border);">
-                                    <summary style="cursor:pointer; color:var(--primary); font-weight:bold;">تسريب سري للمشارك: ${pName}</summary>
-                                    <div class="leak-box">
-                                        <p style="font-size:0.9rem;">${leak.hint}</p>
-                                    </div>
-                                </details>
-                            `;
-                        }).join('')}
+        if (myAlliances.length > 0) {
+            allyChatHTML = `
+                <div style="background:#0e1726; border:1px solid var(--info); padding:12px; border-radius:8px; margin-top:15px;">
+                    <h4 style="color:var(--info);">💬 صندوق التواصل السري للمتحالفين:</h4>
+                    <div class="form-group" style="margin-top:8px;">
+                        <label>اختر حليفك:</label>
+                        <select id="chatTarget">
+                            ${myAlliances.map(a => {
+                                const allyId = a.p1 === player.id ? a.p2 : a.p1;
+                                const allyName = GameState.players.find(p => p.id === allyId)?.name;
+                                return `<option value="${allyId}">${allyName}</option>`;
+                            }).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="chatText" rows="2" placeholder="اكتب رسالة سرية لحليفك..."></textarea>
                     </div>
                 </div>
             `;
         }
 
         this.phaseContent.innerHTML = `
-            <div class="card-box">
-                <h2 style="color:var(--primary); margin-bottom:10px;">${caseData.title}</h2>
-                <p style="font-size:1rem; line-height:1.6; color:var(--text-main); margin-bottom:16px;">
-                    ${caseData.incidentOverview}
-                </p>
-                <h3 style="color:var(--primary); margin-bottom:12px; font-size:1.1rem;">مصفوفة الأدلة والشبهات المتقاطعة:</h3>
-                ${matrixHTML}
-            </div>
-            ${privateLeaksHTML}
-            <div style="margin-top:24px; text-align:center;">
-                <button onclick="UI.startPhaseVoting()" style="width:100%; padding:14px; font-size:1.1rem;">الانتقال إلى جلسة الاقتراع والحكم</button>
+            <div style="background:var(--bg-accent); padding:16px; border-radius:8px; border-right:4px solid var(--primary);">
+                <h3>بطاقاتك المتاحة لهذه الجولة (${player.hand.length}):</h3>
+                <p style="color:var(--text-muted); font-size:0.85rem; margin-top:4px;">اختر بطاقة واحدة لاستخدامها أو تخطى الدور:</p>
+
+                <div class="cards-grid">
+                    ${player.hand.map(c => `
+                        <div class="game-card" id="card_${c.uniqueId}" onclick="UI.selectCard('${c.uniqueId}')">
+                            <span class="risk-badge risk-${c.risk}">خطر: ${c.risk === 'low' ? 'منخفض' : c.risk === 'med' ? 'متوسط' : 'عالي'}</span>
+                            <h4 style="color:var(--primary); margin-top:15px;">${c.name}</h4>
+                            <p style="font-size:0.85rem; color:var(--text-main); margin-top:6px;">${c.desc}</p>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="form-group">
+                    <label>الهدف المعني بالتأثير (إن وجد):</label>
+                    <select id="actionTarget">
+                        ${otherPlayers.map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
+                    </select>
+                </div>
+
+                ${allyChatHTML}
+
+                <button onclick="UI.submitAction()" style="width:100%; margin-top:15px; padding:12px;">تنفيذ الإجراء وإنهاء الدور</button>
             </div>
         `;
     },
 
-    // PHASE 5: VOTING
-    startPhaseVoting() {
+    selectCard(uniqueId) {
+        document.querySelectorAll('.game-card').forEach(el => el.classList.remove('selected'));
+        const target = document.getElementById(`card_${uniqueId}`);
+        if (target) {
+            target.classList.add('selected');
+            GameState.selectedCardId = uniqueId;
+        }
+    },
+
+    submitAction() {
+        const player = GameState.players[GameState.activePlayerIndex];
+        const targetId = document.getElementById('actionTarget')?.value;
+        const chatText = document.getElementById('chatText')?.value.trim();
+        const chatTarget = document.getElementById('chatTarget')?.value;
+
+        // Process Private Chat
+        if (chatText && chatTarget) {
+            GameState.allianceMessages.push({ from: player.id, to: chatTarget, text: chatText });
+        }
+
+        // Process Card Action
+        if (GameState.selectedCardId) {
+            const card = player.hand.find(c => c.uniqueId === GameState.selectedCardId);
+            if (card) {
+                GameState.roundSecretActions.push({
+                    actorId: player.id,
+                    targetId: targetId,
+                    card: card
+                });
+
+                // Apply immediate mechanics if alliance card
+                if (card.effect === 'ALLIANCE') {
+                    GameState.alliances.push({ p1: player.id, p2: targetId });
+                }
+            }
+        }
+
+        GameState.selectedCardId = null;
+        GameState.activePlayerIndex++;
+
+        if (GameState.activePlayerIndex >= GameState.players.length) {
+            this.startDiscussionAndEvidencePhase();
+        } else {
+            this.promptPlayerTurn();
+        }
+    },
+
+    async startDiscussionAndEvidencePhase() {
+        GameState.phase = 'DISCUSSION';
+        this.renderRepList();
+        document.getElementById('phaseName').innerText = 'النقاش وتقاطع الأدلة العامة';
+        document.getElementById('activePlayer').innerText = 'الجميع';
+
+        this.phaseContent.innerHTML = `
+            <div style="text-align:center; padding:40px;">
+                <h3 style="color:var(--primary);">جاري استخراج الشبهات والأدلة...</h3>
+            </div>
+        `;
+
+        // Request soft clues from AI
+        const rawPayload = {
+            round: GameState.round,
+            players: GameState.players.map(p => ({ id: p.id, name: p.name, rep: p.rep })),
+            secretActions: GameState.roundSecretActions
+        };
+
+        let evidenceData = await this.fetchAIEvidences(rawPayload);
+
+        let cluesHTML = evidenceData.clues.map(c => `
+            <div class="evidence-box">
+                <p style="font-size:1rem; line-height:1.5;">🔍 <strong>دليل عام:</strong> ${c}</p>
+            </div>
+        `).join('');
+
+        this.phaseContent.innerHTML = `
+            <div style="background:var(--bg-accent); padding:18px; border-radius:8px;">
+                <h3 style="color:var(--primary); margin-bottom:12px;">تقرير أدلة الجولة:</h3>
+                ${cluesHTML}
+                <p style="color:var(--text-muted); font-size:0.85rem; margin-top:10px;">
+                    تناقشوا فيما بينكم! كشوفات السمعة والأدلة تشير إلى خصائص ومؤشرات عامة دون حتمية قاطعة.
+                </p>
+                <button onclick="UI.startVotingPhase()" style="width:100%; margin-top:20px; padding:14px;">الانتقال للتصويت والتضحية بالنقاط</button>
+            </div>
+        `;
+    },
+
+    async fetchAIEvidences(payload) {
+        try {
+            const res = await fetch('/api/game', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ rawData: payload })
+            });
+            if (!res.ok) throw new Error();
+            return await res.json();
+        } catch {
+            // Local fallback for soft clues
+            return {
+                clues: [
+                    "شوهدت تحركات مالية ترتبط بطفيف من النقاط لدى أحد أصحاب السمعة العالية.",
+                    "تم استخدام بطاقة ذات مستوى خطر مرتفع ترك أثراً أضر باستقرار الأصول."
+                ]
+            };
+        }
+    },
+
+    startVotingPhase() {
         GameState.phase = 'VOTING';
         GameState.activePlayerIndex = 0;
         GameState.votes = {};
-        this.renderVotingTurn();
+        this.promptVoteTurn();
     },
 
-    renderVotingTurn() {
-        this.updateHeader();
+    promptVoteTurn() {
         const player = GameState.players[GameState.activePlayerIndex];
+        this.showOverlay(
+            `تصويت اللاعب: ${player.name}`,
+            `تنبيه: التصويت يستلزم استثمار 2 نقطة من سمعتك! لو خطأ تفقدها.`,
+            () => this.renderVotePhase()
+        );
+    },
+
+    renderVotePhase() {
+        this.renderRepList();
+        const player = GameState.players[GameState.activePlayerIndex];
+        document.getElementById('phaseName').innerText = 'التصويت واستثمار النقاط';
+        document.getElementById('activePlayer').innerText = player.name;
+
         const otherPlayers = GameState.players.filter(p => p.id !== player.id);
 
         this.phaseContent.innerHTML = `
-            <div class="secret-banner">⚖️ تصويت سري خاص بـ (${player.name})</div>
-            <div class="card-box">
-                <h3>اصدار الصوت القضائي</h3>
-                <div class="form-group" style="margin-top:12px;">
-                    <label>اختر من ترى أنه المسئول بناءً على تقاطع الأدلة والتسريبات:</label>
+            <div style="background:var(--bg-accent); padding:18px; border-radius:8px;">
+                <h3 style="color:var(--danger);">⚖️ قرار التصويت السري</h3>
+                <p style="margin-top:6px; font-size:0.9rem; color:var(--text-muted);">
+                    رصيدك الحالي: <strong>${player.rep} نقطة</strong>. سيتم اقتطاع <strong>2 نقطة</strong> كرهان استثمار.
+                </p>
+
+                <div class="form-group" style="margin-top:15px;">
+                    <label>من تتهمه بكونه مصدر الضرر في هذه الجولة؟</label>
                     <select id="voteTarget">
                         ${otherPlayers.map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
                     </select>
                 </div>
-                <button onclick="UI.handleCastVote()" style="width:100%; margin-top:10px;">اعتماد الصوت السري</button>
+
+                <button onclick="UI.submitVote()" style="width:100%; margin-top:15px; padding:12px;">اعتماد الصوت والتضحية بـ 2 نقطة</button>
             </div>
         `;
     },
 
-    handleCastVote() {
+    submitVote() {
         const player = GameState.players[GameState.activePlayerIndex];
         const targetId = document.getElementById('voteTarget').value;
+
         GameState.votes[player.id] = targetId;
 
         GameState.activePlayerIndex++;
         if (GameState.activePlayerIndex >= GameState.players.length) {
-            this.startPhaseResult();
+            this.resolveRoundResults();
         } else {
-            this.renderVotingTurn();
+            this.promptVoteTurn();
         }
     },
 
-    // PHASE 6: RESULT
-    startPhaseResult() {
+    resolveRoundResults() {
         GameState.phase = 'RESULT';
-        this.updateHeader();
+        this.renderRepList();
+        document.getElementById('phaseName').innerText = 'نتائج الجولة والحدث المفاجئ';
 
+        // Count votes
         const tally = {};
-        Object.values(GameState.votes).forEach(t => {
-            tally[t] = (tally[t] || 0) + 1;
-        });
+        Object.values(GameState.votes).forEach(t => tally[t] = (tally[t] || 0) + 1);
 
         let maxVotes = 0;
         let accusedId = null;
         for (let t in tally) {
-            if (tally[t] > maxVotes) {
-                maxVotes = tally[t];
-                accusedId = t;
-            }
+            if (tally[t] > maxVotes) { maxVotes = tally[t]; accusedId = t; }
         }
 
         const accusedPlayer = GameState.players.find(p => p.id === accusedId);
 
+        // Apply Vote consequences (Minus 2 for wrong voters, Refund/Bonus for correct)
+        GameState.players.forEach(p => {
+            const votedFor = GameState.votes[p.id];
+            if (votedFor === accusedId) {
+                p.rep += 1; // Correct vote: Get back investment + 1 bonus
+            } else {
+                p.rep = Math.max(0, p.rep - 2); // Wrong vote: Lose 2 points
+            }
+        });
+
+        // Trigger Wild Event
+        const randomEvent = WILD_EVENTS[Math.floor(Math.random() * WILD_EVENTS.length)];
+        this.applyWildEvent(randomEvent);
+
+        this.renderRepList();
+
         this.phaseContent.innerHTML = `
-            <div class="card-box" style="text-align:center;">
-                <h2>نتيجة المداولة - الجولة ${GameState.round}</h2>
-                <p style="margin-top:16px; font-size:1.2rem;">
-                    بناءً على الأغلبية، تم إدانة المشارك: 
-                    <strong style="color:var(--danger);">${accusedPlayer ? accusedPlayer.name : 'لا أحد (تعادل بالأصوات)'}</strong> 
-                    بواقع (${maxVotes}) أصوات.
+            <div style="background:var(--bg-accent); padding:20px; border-radius:8px; text-align:center;">
+                <h2>نتيجة الاقتراع</h2>
+                <p style="margin-top:10px; font-size:1.1rem;">
+                    تم إدانة المشارك: <strong style="color:var(--danger);">${accusedPlayer ? accusedPlayer.name : 'لا أحد'}</strong> 
+                    بأغلبية (${maxVotes}) أصوات.
                 </p>
-                <div style="margin-top:20px; text-align:right;">
-                    <h4 style="color:var(--primary); margin-bottom:8px;">سجل أصوات الجلسة:</h4>
-                    ${Object.entries(GameState.votes).map(([voter, target]) => {
-                        const vName = GameState.players.find(p => p.id === voter)?.name;
-                        const tName = GameState.players.find(p => p.id === target)?.name;
-                        return `<div class="vote-item"><span>المشارك: ${vName}</span> <span>وجه التهمة إلى ➔ ${tName}</span></div>`;
-                    }).join('')}
+
+                <div class="event-box">
+                    <h3>💥 حدث عشوائي مفاجئ: ${randomEvent.name}</h3>
+                    <p style="margin-top:6px;">${randomEvent.desc}</p>
                 </div>
-                <p style="margin-top:16px; color:var(--text-muted); font-size:0.85rem;">
-                    تنويه: الأفعال والتفاصيل السرية التي لم تكشفها الأدلة تظل مكتومة ومستمرة في السجل لتبنى عليها الجولات التالية.
-                </p>
+
+                <button onclick="UI.nextRound()" style="width:100%; margin-top:20px; padding:14px;">الانتقال للجولة التالية ➔</button>
             </div>
-            <button onclick="UI.nextRound()" style="width:100%; padding:14px; margin-top:10px; font-size:1.1rem;">الانتقال للجولة التالية</button>
         `;
+    },
+
+    applyWildEvent(event) {
+        if (event.action === 'ADD_ALL') {
+            GameState.players.forEach(p => p.rep += 1);
+        } else if (event.action === 'MINUS_TOP') {
+            let maxRep = -1;
+            GameState.players.forEach(p => { if (p.rep > maxRep) maxRep = p.rep; });
+            GameState.players.forEach(p => { if (p.rep === maxRep) p.rep = Math.max(0, p.rep - 2); });
+        } else if (event.action === 'ADD_LOWEST') {
+            let minRep = 999;
+            GameState.players.forEach(p => { if (p.rep < minRep) minRep = p.rep; });
+            GameState.players.forEach(p => { if (p.rep === minRep) p.rep += 2; });
+        } else if (event.action === 'MINUS_ALLIES') {
+            GameState.alliances.forEach(a => {
+                const p1 = GameState.players.find(p => p.id === a.p1);
+                const p2 = GameState.players.find(p => p.id === a.p2);
+                if (p1) p1.rep = Math.max(0, p1.rep - 1);
+                if (p2) p2.rep = Math.max(0, p2.rep - 1);
+            });
+        }
     },
 
     nextRound() {
         GameState.round++;
-        GameState.privateMessages = [];
-        GameState.alliances = [];
-        this.startPhaseDiplomacy();
+        GameState.roundSecretActions = [];
+        GameState.votes = {};
+        this.startRound();
     }
 };
 
